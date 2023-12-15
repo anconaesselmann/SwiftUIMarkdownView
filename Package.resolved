@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "loadableview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/anconaesselmann/LoadableView",
+      "state" : {
+        "revision" : "5d6f32226f9fad9ae0eed65c31e35722cc136871",
+        "version" : "0.3.7"
+      }
+    },
+    {
+      "identity" : "splash",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JohnSundell/Splash",
+      "state" : {
+        "revision" : "7f4df436eb78fe64fe2c32c58006e9949fa28ad8",
+        "version" : "0.16.0"
+      }
+    }
+  ],
+  "version" : 2
+}
