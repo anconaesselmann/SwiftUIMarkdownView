@@ -20,7 +20,13 @@ public struct AsyncMarkdownView: IDedDefaultLoadableView {
     }
 
     public func loaded(_ markdown: String) -> some View {
-        MarkdownView(style: style, markdown: markdown)
+        ScrollView {
+            MarkdownView(style: style, markdown: markdown)
+                .font(.title3)
+                .textSelection(.enabled)
+                .padding()
+                .padding(.bottom, 256)
+        }
     }
 }
 
