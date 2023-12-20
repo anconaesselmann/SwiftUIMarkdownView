@@ -26,7 +26,7 @@ public extension String {
     }
 
     mutating func insertData(using dataProvider: any MDDataProvider) {
-        replace(#/\{([^\}]+)\}/#) { match in
+        replace(#/\{([^\}^\:]+)\}/#) { match in
             let key = String(match.output.1)
             guard let value = dataProvider.value(for: key) else {
                 return "MISSING VALUE FOR KEY \(key)"

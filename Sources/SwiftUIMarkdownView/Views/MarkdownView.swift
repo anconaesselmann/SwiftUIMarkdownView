@@ -13,7 +13,7 @@ public struct MarkdownView: View {
         self.style = style
     }
 
-    private static func header(_ string: String, for size: Int, elementStyles: [MDElementType: MDElementStyle]) -> some View {
+    private static func header(_ text: Text, for size: Int, elementStyles: [MDElementType: MDElementStyle]) -> some View {
         let elementStyle: MDElementStyle?
         let font: Font
         if size <= 1 {
@@ -27,7 +27,7 @@ public struct MarkdownView: View {
             elementStyle = elementStyles[.header(3)]
         }
         let (leading, trailing, top, bottom) = Self.padding(from: elementStyle?.padding ?? [])
-        return Text(LocalizedStringKey(string))
+        return text
             .font(font)
             .padding(.leading, leading)
             .padding(.trailing, trailing)
@@ -64,15 +64,22 @@ public struct MarkdownView: View {
     @ViewBuilder
     private static func view(for element: any MDElement, elementStyles: [MDElementType: MDElementStyle]) -> some View {
         switch element {
-        case let text as MDText:
+        case let text as MDInterpolatedText:
             let (leading, trailing, top, bottom) = Self.padding(from: elementStyles[.text]?.padding ?? [])
-            Text(LocalizedStringKey(text.string))
+            text.text
+                .padding(.leading, leading)
+                .padding(.trailing, trailing)
+                .padding(.top, top)
+                .padding(.bottom, bottom)
+        case let plainText as MDPlainText:
+            let (leading, trailing, top, bottom) = Self.padding(from: elementStyles[.text]?.padding ?? [])
+            Text(LocalizedStringKey(plainText.string))
                 .padding(.leading, leading)
                 .padding(.trailing, trailing)
                 .padding(.top, top)
                 .padding(.bottom, bottom)
         case let header as MDHeader:
-            Self.header(header.string, for: header.size.rawValue, elementStyles: elementStyles)
+            Self.header(header.text, for: header.size.rawValue, elementStyles: elementStyles)
         case let listRow as MDListRow:
             EmptyView()
         case let list as MDList:
@@ -83,7 +90,7 @@ public struct MarkdownView: View {
                         Text("•")
                         Spacer()
                     }
-                    Text(LocalizedStringKey(listRow.string))
+                    listRow.text
                 }
                 .padding(.leading, leading)
                 .padding(.trailing, trailing)
@@ -91,7 +98,7 @@ public struct MarkdownView: View {
                 .padding(.bottom, bottom)
             }
         case let code as MDCode:
-            CodeView(code: code.code)
+            CodeView(code: code.codeString)
         case let frame as MDFrame:
             VStack(alignment: .leading) {
                 ForEach(frame.elements, id: \.id) { element in
