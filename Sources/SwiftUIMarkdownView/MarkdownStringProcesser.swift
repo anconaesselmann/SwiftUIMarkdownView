@@ -10,6 +10,29 @@ public extension String {
         }
     }
 
+    func mdImage(_ predicate: (String) -> MDImageStyle?) -> MDImage? {
+        if
+            let result = try? #/!\[([^\]]+)\]\(([^\)]+)\)/#.firstMatch(in: self),
+            let url = URL(string: String(result.output.2))
+        {
+            let style = predicate(String(result.output.2))
+            return MDImage(altText: String(result.output.1), url: url, style: style)
+        } else {
+            return nil
+        }
+    }
+
+    func mdImage(using conversionRules: [any ImageConversionRule]) -> MDImage? {
+        mdImage {
+            for rule in conversionRules {
+                if rule.matches($0) {
+                    return rule.map($0)
+                }
+            }
+            return nil
+        }
+    }
+
     mutating func mapLink(using conversionRules: [any LinkConversionRule]) {
         mapLink {
             for rule in conversionRules {
@@ -45,4 +68,9 @@ public extension String {
 public protocol LinkConversionRule {
     func matches(_ string: String) -> Bool
     func map(_ string: String) -> String
+}
+
+public protocol ImageConversionRule {
+    func matches(_ string: String) -> Bool
+    func map(_ string: String) -> MDImageStyle
 }

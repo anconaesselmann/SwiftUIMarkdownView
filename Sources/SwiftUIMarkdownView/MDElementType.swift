@@ -7,4 +7,5 @@ public enum MDElementType: Hashable {
     case header(Int)
     case text
     case listItem
+    case image
 }

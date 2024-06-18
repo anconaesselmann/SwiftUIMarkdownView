@@ -85,6 +85,35 @@ public struct MDCode: MDElement, MDGroup {
     }
 }
 
+public struct MDImageStyle {
+    public enum Shape {
+        case `default`
+        case circle
+    }
+
+    public init(size: CGSize?, shape: Shape = .default) {
+        self.size = size
+        self.shape = shape
+    }
+    
+    public let size: CGSize?
+    public let shape: Shape
+}
+
+public struct MDImage: MDElement {
+    public let id: UUID
+    public let altText: String
+    public let url: URL
+    public let style: MDImageStyle?
+
+    public init(altText: String, url: URL, style: MDImageStyle? = nil) {
+        self.id = UUID()
+        self.altText = altText
+        self.url = url
+        self.style = style
+    }
+}
+
 public struct MDFrame: MDElement, MDGroup {
     public let id = UUID()
     public var elements: [any MDElement]
@@ -131,6 +160,8 @@ public struct MDDocument: MDElement {
                     frame.elements.append(listRow)
                     currentFrame = frame
                 }
+            case let image as MDImage:
+                currentFrame.elements.append(image)
             case is MDCodeMarker:
                 if let frame = currentFrame as? MDCode {
                     currentFrame = stack.removeLast()
@@ -162,7 +193,9 @@ public struct MDDecoder {
             string.insertData(using: dataProvider)
         }
         string.mapLink(using: style.linkConversionRules)
-        if string.hasPrefix("### ") {
+        if let image = string.mdImage(using: style.imageConversionRules) {
+            return image
+        } else if string.hasPrefix("### ") {
             let trimmed = string.deletingPrefix("### ")
             let text = trimmed.interpolatedText() ?? Text(LocalizedStringKey(trimmed))
             return MDHeader(

@@ -99,6 +99,39 @@ public struct MarkdownView: View {
             }
         case let code as MDCode:
             CodeView(code: code.codeString)
+        case let mdImage as MDImage:
+            let (leading, trailing, top, bottom) = Self.padding(from: elementStyles[.image]?.padding ?? [])
+            let size: CGSize? = {
+                if let style = mdImage.style {
+                    return style.size
+                } else {
+                    return nil
+                }
+            }()
+            AsyncImage(url: mdImage.url) { image in
+                if let size = size {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: size.width, height: size.height)
+                } else {
+                    image
+                }
+            } placeholder: {
+                if let size = size {
+                    ProgressView()
+                        .frame(width: size.width, height: size.height)
+                } else {
+                    ProgressView()
+                }
+            }
+            .if(mdImage.style?.shape == .circle) {
+                $0.clipShape(Circle())
+            }
+            .padding(.leading, leading)
+            .padding(.trailing, trailing)
+            .padding(.top, top)
+            .padding(.bottom, bottom)
         case let frame as MDFrame:
             VStack(alignment: .leading) {
                 ForEach(frame.elements, id: \.id) { element in
@@ -128,16 +161,5 @@ public struct MarkdownView: View {
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-    }
-}
-
-
-public extension SwiftUI.Color {
-    static var random: SwiftUI.Color {
-        SwiftUI.Color(
-            red: Double.random(in: 0...1),
-            green: Double.random(in: 0...1),
-            blue: Double.random(in: 0...1)
-        )
     }
 }
