@@ -8,4 +8,8 @@ public enum MDElementType: Hashable {
     case text
     case listItem
     case image
+    case rule
+    case lineBreak
+    case frame
+    case codeBlock
 }

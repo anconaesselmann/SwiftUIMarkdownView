@@ -33,6 +33,14 @@ public extension String {
         }
     }
 
+    func mdRule() -> MDRule? {
+        self == "***" || self == "---" || self == "___" ? MDRule() : nil
+    }
+
+    func lineBreak() -> MDLineBreak? {
+        self == "<br />" ? MDLineBreak() : nil
+    }
+
     mutating func mapLink(using conversionRules: [any LinkConversionRule]) {
         mapLink {
             for rule in conversionRules {

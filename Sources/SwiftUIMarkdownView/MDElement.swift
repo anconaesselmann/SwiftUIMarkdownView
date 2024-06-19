@@ -48,6 +48,15 @@ public struct MDCodeMarker: MDElement {
     }
 }
 
+public struct MDRule: MDElement {
+    public let id = UUID()
+}
+
+public struct MDLineBreak: MDElement {
+    public let id = UUID()
+    public var numberLines: Int = 1
+}
+
 public struct MDListRow: MDElement {
     public let id = UUID()
     public let text: Text
@@ -162,6 +171,15 @@ public struct MDDocument: MDElement {
                 }
             case let image as MDImage:
                 currentFrame.elements.append(image)
+            case let rule as MDRule:
+                currentFrame.elements.append(rule)
+            case let lineBreak as MDLineBreak:
+                if var previousLineBreak = currentFrame.elements.last as? MDLineBreak {
+                    previousLineBreak.numberLines += 1
+                    currentFrame.elements[currentFrame.elements.count - 1] = previousLineBreak
+                } else {
+                    currentFrame.elements.append(lineBreak)
+                }
             case is MDCodeMarker:
                 if let frame = currentFrame as? MDCode {
                     currentFrame = stack.removeLast()
@@ -195,6 +213,10 @@ public struct MDDecoder {
         string.mapLink(using: style.linkConversionRules)
         if let image = string.mdImage(using: style.imageConversionRules) {
             return image
+        } else if let rule = string.mdRule() {
+            return rule
+        } else if let lineBreak = string.lineBreak() {
+            return lineBreak
         } else if string.hasPrefix("### ") {
             let trimmed = string.deletingPrefix("### ")
             let text = trimmed.interpolatedText() ?? Text(LocalizedStringKey(trimmed))

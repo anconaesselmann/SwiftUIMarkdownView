@@ -98,7 +98,12 @@ public struct MarkdownView: View {
                 .padding(.bottom, bottom)
             }
         case let code as MDCode:
+            let (leading, trailing, top, bottom) = Self.padding(from: elementStyles[.codeBlock]?.padding ?? [])
             CodeView(code: code.codeString)
+                .padding(.leading, leading)
+                .padding(.trailing, trailing)
+                .padding(.top, top)
+                .padding(.bottom, bottom)
         case let mdImage as MDImage:
             let (leading, trailing, top, bottom) = Self.padding(from: elementStyles[.image]?.padding ?? [])
             let size: CGSize? = {
@@ -132,15 +137,28 @@ public struct MarkdownView: View {
             .padding(.trailing, trailing)
             .padding(.top, top)
             .padding(.bottom, bottom)
+        case let rule as MDRule:
+            let (leading, trailing, top, bottom) = Self.padding(from: elementStyles[.rule]?.padding ?? [])
+            Divider()
+                .padding(.leading, leading)
+                .padding(.trailing, trailing)
+                .padding(.top, top)
+                .padding(.bottom, bottom)
+        case let lineBreak as MDLineBreak:
+            let (_, _, top, bottom) = Self.padding(from: elementStyles[.lineBreak]?.padding ?? [])
+            Spacer()
+                .frame(height: 0)
+                .padding(.top, top)
+                .padding(.bottom, bottom)
         case let frame as MDFrame:
             VStack(alignment: .leading) {
                 ForEach(frame.elements, id: \.id) { element in
                     AnyView(Self.view(for: element, elementStyles: elementStyles))
                 }
             }
-//            .background(SwiftUI.Color.random)
         case let document as MDDocument:
-            VStack(alignment: .leading, spacing: 64) {
+            let (_, _, top, bottom) = Self.padding(from: elementStyles[.frame]?.padding ?? [.top(64)])
+            VStack(alignment: .leading, spacing: top + bottom) {
                 ForEach(document.frames, id: \.id) { frame in
                     AnyView(Self.view(for: frame, elementStyles: elementStyles))
                 }
@@ -153,7 +171,9 @@ public struct MarkdownView: View {
     public var body: some View {
         VStack(spacing: 4) {
             let decoder = MDDecoder(style: style)
-            let lineTokens = markdown.split(separator: "\n").map {
+            let lineTokens = markdown
+                .replacing("\n\n\n", with: "\n<br />\n")
+                .split(separator: "\n").map {
                 decoder.lineToken(String($0))
             }
             let document = MDDocument(lineTokens)
