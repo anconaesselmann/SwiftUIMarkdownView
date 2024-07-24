@@ -170,13 +170,11 @@ public struct MarkdownView: View {
 
     public var body: some View {
         VStack(spacing: 4) {
-            let decoder = MDDecoder(style: style)
-            let lineTokens = markdown
-                .replacing("\n\n\n", with: "\n<br />\n")
-                .split(separator: "\n").map {
-                decoder.lineToken(String($0))
-            }
-            let document = MDDocument(lineTokens)
+            let tokenizer = MDTokenizer(
+                markdown: markdown,
+                style: style
+            )
+            let document = MDDocument(tokenizer.tokenize())
             Self.view(for: document, elementStyles: style.elementStyles)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)

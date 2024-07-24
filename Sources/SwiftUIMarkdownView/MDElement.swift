@@ -202,14 +202,47 @@ public struct MDDocument: MDElement {
     }
 }
 
-public struct MDDecoder {
+public struct MDTokenizer {
+    private let markdown: String
     public let style: MarkdownStyle
 
-    public func lineToken(_ line: String) -> any MDElement {
+    public init(markdown: String, style: MarkdownStyle) {
+        self.markdown = markdown
+        self.style = style
+    }
+
+    public func tokenize() -> [any MDElement] {
+        var lines = markdown
+            .replacing("\r\n", with: "\n")
+            .replacing("\r", with: "\n")
+            .split(separator: "\n")
+        var links = [String: URL]()
+        while true {
+            guard !lines.isEmpty else {
+                break
+            }
+            guard let last = lines.last else {
+                break
+            }
+            if let (key, url) = String(last).readLink() {
+                links[key] = url
+                print("URL:", url)
+                let _ = lines.popLast()
+            } else {
+                break
+            }
+        }
+        return lines.map {
+            lineToken(String($0), links: links)
+        }
+    }
+
+    private func lineToken(_ line: String, links: [String: URL]) -> any MDElement {
         var string = line
         if let dataProvider = style.dataProvider {
             string.insertData(using: dataProvider)
         }
+        string.expandSquareLink(using: links)
         string.mapLink(using: style.linkConversionRules)
         if let image = string.mdImage(using: style.imageConversionRules) {
             return image

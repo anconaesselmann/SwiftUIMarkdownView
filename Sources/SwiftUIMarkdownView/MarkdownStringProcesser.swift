@@ -9,7 +9,11 @@ public extension String {
             "[\(match.output.1)](\(predicate(String(match.output.2))))"
         }
     }
-
+    mutating func mapSquareLink(_ predicate: (String) -> String) {
+        replace(#/\[([^\]]+)\]\[([^\]]+)\]/#) { match in
+            "[\(match.output.1)](\(predicate(String(match.output.2))))"
+        }
+    }
     func mdImage(_ predicate: (String) -> MDImageStyle?) -> MDImage? {
         if
             let result = try? #/!\[([^\]]+)\]\(([^\)]+)\)/#.firstMatch(in: self),
@@ -17,6 +21,17 @@ public extension String {
         {
             let style = predicate(String(result.output.2))
             return MDImage(altText: String(result.output.1), url: url, style: style)
+        } else {
+            return nil
+        }
+    }
+    func readLink() -> (String, URL)? {
+        if
+            let result = try? #/\s?\[([^\]]+)\]:\s+(http[^\s]+)/#.firstMatch(in: self),
+            let url = URL(string: String(result.output.2))
+        {
+            let key = String(result.output.1)
+            return (key, url)
         } else {
             return nil
         }
@@ -34,7 +49,7 @@ public extension String {
     }
 
     func mdRule() -> MDRule? {
-        self == "***" || self == "---" || self == "___" ? MDRule() : nil
+        self.hasPrefix("***") || self.hasPrefix("---") || self.hasPrefix("___") ? MDRule() : nil
     }
 
     func lineBreak() -> MDLineBreak? {
@@ -49,6 +64,15 @@ public extension String {
                 }
             }
             return $0
+        }
+    }
+
+    mutating func expandSquareLink(using squareLinks: [String: URL]) {
+        mapSquareLink {
+            guard let link = squareLinks[$0] else {
+                return $0
+            }
+            return link.absoluteString
         }
     }
 
