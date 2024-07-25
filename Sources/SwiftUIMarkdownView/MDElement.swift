@@ -226,7 +226,6 @@ public struct MDTokenizer {
             }
             if let (key, url) = String(last).readLink() {
                 links[key] = url
-                print("URL:", url)
                 let _ = lines.popLast()
             } else {
                 break
