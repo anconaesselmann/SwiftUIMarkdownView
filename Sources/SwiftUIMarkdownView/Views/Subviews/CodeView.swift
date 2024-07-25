@@ -33,6 +33,7 @@ struct CodeView: View {
             VStack {
                 HStack {
                     Spacer()
+                    #if os(macOS)
                     Button {
                         let pasteboard = NSPasteboard.general
                         pasteboard.clearContents()
@@ -40,6 +41,7 @@ struct CodeView: View {
                     } label: {
                         Image(systemName: "doc.on.doc")
                     }.padding()
+                    #endif
                 }
                 Spacer()
             }

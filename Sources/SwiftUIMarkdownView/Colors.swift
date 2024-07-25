@@ -25,17 +25,17 @@ struct Colors {
 import UIKit
 
 struct Colors {
-    static let plainTextColor: Color = Color(UIColor(named: "XCDefault.plainTextColor", in: .module, compatibleWith: nil)!)
-    static let keyword: Color = Color(UIColor(named: "XCDefault.keyword", in: .module, compatibleWith: nil)!)
-    static let string: Color = Color(UIColor(named: "XCDefault.string", in: .module, compatibleWith: nil)!)
-    static let type: Color = Color(UIColor(named: "XCDefault.type", in: .module, compatibleWith: nil)!)
-    static let call: Color = Color(UIColor(named: "XCDefault.call", in: .module, compatibleWith: nil)!)
-    static let number: Color = Color(UIColor(named: "XCDefault.number", in: .module, compatibleWith: nil)!)
-    static let comment: Color = Color(UIColor(named: "XCDefault.comment", in: .module, compatibleWith: nil)!)
-    static let property: Color = Color(UIColor(named: "XCDefault.property", in: .module, compatibleWith: nil)!)
-    static let dotAccess: Color = Color(UIColor(named: "XCDefault.dotAccess", in: .module, compatibleWith: nil)!)
-    static let preprocessing: Color = Color(UIColor(named: "XCDefault.preprocessing", in: .module, compatibleWith: nil)!)
-    static let backgroundColor: Color = .white
+    static let plainTextColor = UIColor(named: "XCDefault.plainTextColor", in: .module, compatibleWith: nil)!
+    static let keyword = UIColor(named: "XCDefault.keyword", in: .module, compatibleWith: nil)!
+    static let string = UIColor(named: "XCDefault.string", in: .module, compatibleWith: nil)!
+    static let type = UIColor(named: "XCDefault.type", in: .module, compatibleWith: nil)!
+    static let call = UIColor(named: "XCDefault.call", in: .module, compatibleWith: nil)!
+    static let number = UIColor(named: "XCDefault.number", in: .module, compatibleWith: nil)!
+    static let comment = UIColor(named: "XCDefault.comment", in: .module, compatibleWith: nil)!
+    static let property = UIColor(named: "XCDefault.property", in: .module, compatibleWith: nil)!
+    static let dotAccess = UIColor(named: "XCDefault.dotAccess", in: .module, compatibleWith: nil)!
+    static let preprocessing = UIColor(named: "XCDefault.preprocessing", in: .module, compatibleWith: nil)!
+    static let backgroundColor: UIColor = .white
 }
 #endif
 

@@ -2,7 +2,11 @@
 //
 
 import Splash
+#if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
 
 public extension Theme {
     // Xcode Dark theme
