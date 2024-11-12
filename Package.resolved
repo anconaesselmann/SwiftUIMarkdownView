@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/anconaesselmann/LoadableView",
       "state" : {
-        "revision" : "5d6f32226f9fad9ae0eed65c31e35722cc136871",
-        "version" : "0.3.7"
+        "revision" : "a63273f2ec71b9c9fc45f71cc6954cfd53d187c3",
+        "version" : "0.9.2"
       }
     },
     {

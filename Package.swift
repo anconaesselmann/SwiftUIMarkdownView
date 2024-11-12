@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/JohnSundell/Splash", from: "0.1.0"),
-        .package(url: "https://github.com/anconaesselmann/LoadableView", from: "0.3.0"),
+        .package(url: "https://github.com/anconaesselmann/LoadableView", from: "0.9.2"),
     ],
     targets: [
         .target(
